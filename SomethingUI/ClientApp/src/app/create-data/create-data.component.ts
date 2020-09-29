@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   templateUrl: './create-data.component.html'
 })
 export class CreateDataComponent {
-  public somethings: Something[];
+  public somethingElses: SomethingElse[];
   public token: Token;
   public http: HttpClient;
   public baseUrl: string;
@@ -23,11 +23,12 @@ export class CreateDataComponent {
         "Authorization",
         `Bearer ${this.token.access_token}`
       );
-      this.http.get<Something[]>(this.baseUrl + 'api/things', { headers: this.header }).subscribe(result => {
-        this.somethings = result;
+      this.http.get<SomethingElse[]>(this.baseUrl + 'api/thingselse', { headers: this.header }).subscribe(result => {
+        this.somethingElses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
+
   async clickFunction() {
     await this.http.get<Token>(this.baseUrl + 'home/authenticate').subscribe(result => {
       this.token = result;
@@ -44,8 +45,8 @@ export class CreateDataComponent {
       const lengthOfCode = 10;
       let name = this.makeRandom(lengthOfCode, possible);
       let body = `Name=${name}`;
-      this.http.post<any>(this.baseUrl + 'api/things', body, { headers: this.header }).subscribe(result => {
-        this.somethings = result;
+      this.http.post<any>(this.baseUrl + 'api/thingselse', body, { headers: this.header }).subscribe(result => {
+        this.somethingElses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
@@ -60,6 +61,10 @@ export class CreateDataComponent {
 
 interface Something {
   name: string;
+}
+interface SomethingElse {
+  name: string;
+  somethings: Something[];
 }
 
 interface Token {

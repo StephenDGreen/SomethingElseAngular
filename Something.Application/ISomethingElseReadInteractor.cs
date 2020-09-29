@@ -5,6 +5,7 @@ namespace Something.Application
 {
     public interface ISomethingElseReadInteractor
     {
+        List<SomethingElse> GetSomethingElseIncludingSomethingsList();
         List<SomethingElse> GetSomethingElseList();
     }
 }

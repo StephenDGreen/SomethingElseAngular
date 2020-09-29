@@ -6,12 +6,14 @@ using Something.Persistence;
 using SomethingTests.Infrastructure.Factories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Domain = Something.Domain.Models;
 
 namespace SomethingTests
 {
+    [ExcludeFromCodeCoverage]
     public class SomethingElseTests
     {
         private readonly Domain.SomethingElse somethingElse = Domain.SomethingElse.CreateNamedSomethingElse("Fred Bloggs") ;
@@ -88,7 +90,8 @@ namespace SomethingTests
 
             using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__SaveSomethingElse__SavesSomethingElseToDatabase)))
             {
-                var savedSomethingElse = ctx.SomethingElses.Single();
+                var savedSomethingElse = ctx.SomethingElses.Include(s => s.Somethings).Single();
+                Assert.Equal(somethingElse.Somethings[0].Name, savedSomethingElse.Somethings[0].Name);
                 Assert.Equal(somethingElse.Name, savedSomethingElse.Name);
             };
         }
@@ -113,10 +116,11 @@ namespace SomethingTests
         [Fact]
         public void SomethingElseCreateInteractor_CreateSomethingElse_PersistsSomethingElseWithName()
         {
+            Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
             Mock<ISomethingElseFactory> mockSomethingElseFactory = new Mock<ISomethingElseFactory>();
             mockSomethingElseFactory.Setup(x => x.Create(somethingElse.Name)).Returns(somethingElse);
             Mock<ISomethingElsePersistence> mockPersistence = new Mock<ISomethingElsePersistence>();
-            SomethingElseCreateInteractor somethingElseInteractor = new SomethingElseCreateInteractor(mockSomethingElseFactory.Object, mockPersistence.Object);
+            SomethingElseCreateInteractor somethingElseInteractor = new SomethingElseCreateInteractor(mockSomethingFactory.Object, mockSomethingElseFactory.Object, mockPersistence.Object);
 
             somethingElseInteractor.CreateSomethingElse(somethingElse.Name);
 
@@ -124,7 +128,7 @@ namespace SomethingTests
         }
 
         [Fact]
-        public void SomethingElseReadInteractor_ReadSomethingElseList_RetrievesSomethingElseListFromPersistence()
+        public void SomethingElseReadInteractor_GetSomethingElseList_RetrievesSomethingElseListFromPersistence()
         {
             var somethingElseList = new List<Domain.SomethingElse>();
             somethingElseList.Add(somethingElse);
@@ -174,6 +178,60 @@ namespace SomethingTests
                 var savedSomethingElse = ctx.SomethingElses.Include(s => s.Somethings).Single();
                 Assert.Equal(somethingElse.Somethings[0].Name, savedSomethingElse.Somethings[0].Name);
             };
+        }
+
+        [Fact]
+        public void SomethingElsePersistence__GetSomethingElseList__RetrievesListOfSomethingElseIncludingSomethingListFromDatabase()
+        {
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__GetSomethingElseList__RetrievesListOfSomethingElseIncludingSomethingListFromDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                persistence.SaveSomethingElse(somethingElse);
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(SomethingElsePersistence__GetSomethingElseList__RetrievesListOfSomethingElseIncludingSomethingListFromDatabase)))
+            {
+                var persistence = new SomethingElsePersistence(ctx);
+                var savedSomethingElses = persistence.GetSomethingElseIncludingSomethingList();
+                foreach (var savedSomethingElse in savedSomethingElses)
+                {
+                    Assert.Equal(somethingElse.Somethings[0].Name, savedSomethingElse.Somethings[0].Name);
+                }
+            };
+        }
+
+        [Fact]
+        public void SomethingElseReadInteractor_GetSomethingElseIncludingSomethingsList_RetrievesSomethingElseIncludingSomethingsListFromPersistence()
+        {
+            var somethingElseList = new List<Domain.SomethingElse>();
+            somethingElseList.Add(somethingElse);
+            var mockPersistence = new Mock<ISomethingElsePersistence>();
+            mockPersistence.Setup(x => x.GetSomethingElseIncludingSomethingList()).Returns(somethingElseList);
+            SomethingElseReadInteractor interactor = new SomethingElseReadInteractor(mockPersistence.Object);
+
+            List<Domain.SomethingElse> somethingElseList1 = interactor.GetSomethingElseIncludingSomethingsList();
+
+            foreach (var savedSomethingElse in somethingElseList1)
+            {
+                Assert.Equal(somethingElse.Somethings[0].Name, savedSomethingElse.Somethings[0].Name);
+            }
+        }
+
+        [Fact]
+        public void SomethingElseCreateInteractor_CreateSomethingElse_PersistsSomethingElseWithSomethings()
+        {
+            var name = "Fred Bloggs";
+            var somethingElse1 = Domain.SomethingElse.CreateNamedSomethingElse(name);
+            Mock<ISomethingFactory> mockSomethingFactory = new Mock<ISomethingFactory>();
+            mockSomethingFactory.Setup(x => x.Create(something.Name)).Returns(something);
+            Mock<ISomethingElseFactory> mockSomethingElseFactory = new Mock<ISomethingElseFactory>();
+            mockSomethingElseFactory.Setup(x => x.Create(somethingElse1.Name)).Returns(somethingElse1);
+            Mock<ISomethingElsePersistence> mockPersistence = new Mock<ISomethingElsePersistence>();
+            SomethingElseCreateInteractor somethingElseInteractor = new SomethingElseCreateInteractor(mockSomethingFactory.Object, mockSomethingElseFactory.Object, mockPersistence.Object);
+            string[] othernames = { "Alice Bloggs" };
+            somethingElseInteractor.CreateSomethingElse(name, othernames);
+
+            mockPersistence.Verify(x => x.SaveSomethingElse(somethingElse1));
         }
     }
 }

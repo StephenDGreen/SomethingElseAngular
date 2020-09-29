@@ -19,5 +19,10 @@ namespace Something.Application
         {
             return persistence.GetSomethingElseList();
         }
+
+        public List<SomethingElse> GetSomethingElseIncludingSomethingsList()
+        {
+            return persistence.GetSomethingElseIncludingSomethingList();
+        }
     }
 }

@@ -2,20 +2,34 @@
 
 <p>Generate random data.</p>
 
-<p *ngIf="!somethings"><em>Loading...</em></p>
+<p *ngIf="!somethingelses"><em>Loading...</em></p>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethings" width="50%">
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethingelses" width="50%">
   <thead>
     <tr>
       <th>Name</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let something of somethings">
-      <td>{{ something.name }}</td>
+    <tr *ngFor="let somethingelse of somethingelses">
+      <td>{{ somethingelse.name }}</td>
+      <td>
+        <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethings" width="50%">
+          <thead>
+            <tr>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let something of somethingelse.somethings">
+              <td>{{ something.name }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-primary" (click)="clickFunction()">
+          Add Something
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
-<button class="btn btn-primary" (click)="clickFunction()">
-    Add Something
-</button>

@@ -1,4 +1,6 @@
-﻿using Something.Domain.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Something.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +24,11 @@ namespace Something.Persistence
         public List<Domain.Models.SomethingElse> GetSomethingElseList()
         {
             return ctx.SomethingElses.ToList();
+        }
+
+        public List<Domain.Models.SomethingElse> GetSomethingElseIncludingSomethingList()
+        {
+            return ctx.SomethingElses.Include(s => s.Somethings).ToList();
         }
     }
 }
