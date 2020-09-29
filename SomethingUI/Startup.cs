@@ -57,6 +57,10 @@ namespace SomethingUI
             services.AddScoped<ISomethingCreateInteractor, SomethingCreateInteractor>();
             services.AddScoped<ISomethingReadInteractor, SomethingReadInteractor>();
             services.AddScoped<ISomethingPersistence, SomethingPersistence>();
+            services.AddSingleton<ISomethingElseFactory, SomethingElseFactory>();
+            services.AddScoped<ISomethingElseCreateInteractor, SomethingElseCreateInteractor>();
+            services.AddScoped<ISomethingElseReadInteractor, SomethingElseReadInteractor>();
+            services.AddScoped<ISomethingElsePersistence, SomethingElsePersistence>();
             services.AddSingleton<ISomethingUserManager, SomethingUserManager>(); 
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

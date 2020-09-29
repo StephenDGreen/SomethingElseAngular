@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Something.Persistence;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SomethingTests.Infrastructure.Factories

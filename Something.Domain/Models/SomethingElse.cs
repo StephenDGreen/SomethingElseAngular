@@ -1,13 +1,18 @@
-﻿namespace Something.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace Something.Domain.Models
 {
     public class SomethingElse
     {
         private SomethingElse(string name)
         {
             this.Name = name;
+            this.Somethings = new List<Something>();
         }
 
         public string Name { get; private set; }
+
+        public List<Something> Somethings { get; private set; }
 
         public static SomethingElse CreateNamedSomethingElse(string name)
         {

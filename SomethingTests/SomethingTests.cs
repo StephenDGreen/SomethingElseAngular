@@ -5,14 +5,12 @@ using Something.Persistence;
 using Something.Security;
 using SomethingTests.Infrastructure.Factories;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Xunit;
 using Domain = Something.Domain.Models;
 
 namespace SomethingTests
 {
-    [ExcludeFromCodeCoverage]
     public class SomethingTests
     {
         private readonly Domain.Something something = new Domain.Something() { Name = "Fred Bloggs" };

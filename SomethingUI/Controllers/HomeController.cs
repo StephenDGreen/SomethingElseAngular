@@ -10,7 +10,6 @@ namespace Something.API.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly AppDbContext ctx;
         private readonly ISomethingUserManager userManager;
         private readonly ISomethingCreateInteractor createInteractor;
         private readonly ISomethingReadInteractor readInteractor;
@@ -19,7 +18,6 @@ namespace Something.API.Controllers
         {
             this.createInteractor = createInteractor;
             this.readInteractor = readInteractor;
-            this.ctx = ctx;
             this.userManager = userManager;
         }
 

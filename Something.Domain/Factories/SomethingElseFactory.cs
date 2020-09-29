@@ -3,7 +3,7 @@ using System;
 
 namespace Something.Domain
 {
-    public class SomethingElseFactory 
+    public class SomethingElseFactory : ISomethingElseFactory
     {
         public SomethingElse Create(string name)
         {
