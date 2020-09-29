@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Something.Application;
 using Something.Domain;
@@ -14,7 +15,12 @@ namespace SomethingTests
     public class SomethingElseTests
     {
         private readonly Domain.SomethingElse somethingElse = Domain.SomethingElse.CreateNamedSomethingElse("Fred Bloggs") ;
-        private readonly Domain.Something something = new Domain.Something() { Name = "Fred Bloggs" };
+        private readonly Domain.Something something = new Domain.Something() { Name = "Alice Bloggs" };
+
+        public SomethingElseTests()
+        {
+            somethingElse.Somethings.Add(something);
+        }
 
         [Fact]
         public void SomethingElse_HasAName()
@@ -153,6 +159,21 @@ namespace SomethingTests
             int actual = somethingElse1.Somethings.Count;
 
             Assert.Equal(expected, actual);
+        }
+        [Fact]
+        public void DbContextFactory_CreateAppDbContext_SavesSomethingElseWithSomethingToDatabaseAndRetrievesIt()
+        {
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(DbContextFactory_CreateAppDbContext_SavesSomethingElseWithSomethingToDatabaseAndRetrievesIt)))
+            {
+                ctx.SomethingElses.Add(somethingElse);
+                ctx.SaveChanges();
+            };
+
+            using (var ctx = new DbContextFactory().CreateAppDbContext(nameof(DbContextFactory_CreateAppDbContext_SavesSomethingElseWithSomethingToDatabaseAndRetrievesIt)))
+            {
+                var savedSomethingElse = ctx.SomethingElses.Include(s => s.Somethings).Single();
+                Assert.Equal(somethingElse.Somethings[0].Name, savedSomethingElse.Somethings[0].Name);
+            };
         }
     }
 }

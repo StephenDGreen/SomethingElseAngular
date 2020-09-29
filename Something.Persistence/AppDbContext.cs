@@ -14,6 +14,9 @@ namespace Something.Persistence
         {
             modelBuilder.Entity<Domain.Models.Something>().Property<long>("Id");
             modelBuilder.Entity<Domain.Models.SomethingElse>().Property<long>("Id");
+            modelBuilder.Entity<Domain.Models.SomethingElse>()
+                .HasMany(e => e.Somethings)
+                .WithOne();
         }
     }
 }

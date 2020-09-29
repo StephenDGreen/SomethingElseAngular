@@ -4,6 +4,10 @@ namespace Something.Domain.Models
 {
     public class SomethingElse
     {
+        private SomethingElse()
+        {
+        }
+
         private SomethingElse(string name)
         {
             this.Name = name;
