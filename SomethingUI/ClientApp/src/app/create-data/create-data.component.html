@@ -14,22 +14,23 @@
     <tr *ngFor="let somethingelse of somethingelses">
       <td>{{ somethingelse.name }}</td>
       <td>
-        <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethings" width="50%">
+        <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="somethingelse.somethings" width="50%">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Other Name</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let something of somethingelse.somethings">
               <td>{{ something.name }}</td>
+              <td></td>
             </tr>
           </tbody>
         </table>
-        <button class="btn btn-primary" (click)="clickFunction()">
-          Add Something
-        </button>
       </td>
     </tr>
   </tbody>
 </table>
+<button class="btn btn-primary" (click)="clickFunction()">
+    Add Something Else
+</button>

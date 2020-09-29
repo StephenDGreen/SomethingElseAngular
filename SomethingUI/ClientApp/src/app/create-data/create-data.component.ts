@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   templateUrl: './create-data.component.html'
 })
 export class CreateDataComponent {
-  public somethingElses: SomethingElse[];
+  public somethingelses: SomethingElse[];
   public token: Token;
   public http: HttpClient;
   public baseUrl: string;
@@ -24,11 +24,10 @@ export class CreateDataComponent {
         `Bearer ${this.token.access_token}`
       );
       this.http.get<SomethingElse[]>(this.baseUrl + 'api/thingselse', { headers: this.header }).subscribe(result => {
-        this.somethingElses = result;
+        this.somethingelses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
-
   async clickFunction() {
     await this.http.get<Token>(this.baseUrl + 'home/authenticate').subscribe(result => {
       this.token = result;
@@ -40,13 +39,14 @@ export class CreateDataComponent {
         .set(
           'Content-Type',
           'application/x-www-form-urlencoded'
-      );
+        );
       let possible = "abcdefghijklmnoprstuvwy";
       const lengthOfCode = 10;
       let name = this.makeRandom(lengthOfCode, possible);
-      let body = `Name=${name}`;
+      let othername = this.makeRandom(lengthOfCode, possible);
+      let body = `Name=${name}&othername=${othername}`;
       this.http.post<any>(this.baseUrl + 'api/thingselse', body, { headers: this.header }).subscribe(result => {
-        this.somethingElses = result;
+        this.somethingelses = result;
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
@@ -62,6 +62,7 @@ export class CreateDataComponent {
 interface Something {
   name: string;
 }
+
 interface SomethingElse {
   name: string;
   somethings: Something[];
