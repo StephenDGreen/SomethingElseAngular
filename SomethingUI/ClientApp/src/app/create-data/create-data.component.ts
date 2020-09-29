@@ -28,7 +28,7 @@ export class CreateDataComponent {
       }, error2 => console.error(error2));
     }, error1 => console.error(error1));
   }
-  async clickFunction() {
+  async addSomethingElse() {
     await this.http.get<Token>(this.baseUrl + 'home/authenticate').subscribe(result => {
       this.token = result;
       this.header = new HttpHeaders()
